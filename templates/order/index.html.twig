@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création de la commande!{% endblock %}
+
+{% block body %}
+
+<div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+        <form action="{{ path('valided_index')}}">
+        {{form_start(form)}}
+        <h1 class="h2 pb-2">Information de la commande</h1>
+            <h3 class="fs-base fw-normal text-body text-uppercase pb-1 pb-sm-1">1.
+                <span class="text-decoration-underline ms-1">Shipping details</span> 
+            </h3>
+            <p> <a href="{{ path('app_addres_new')}}">ajouter une nouvelle adresse </a>
+            <h3 class="fs-base fw-normal text-body text-uppercase pb-2 pb-sm-3">2. 
+                <span class="text-decoration-undertine ms-1">Choisir votre livraisons</span>
+            </h3>
+                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-1 col-lg-1 col-xl-1">
+                            {{form_row(form.addresses)|replace({'[-br]': '<br/>'})|raw }}
+                        </div>
+                </div>
+                    <h3 class="fs-base fi-normal text-body text-uppercase mt-n4 mt-md-n3 pt-5 pb-2 pb-sm-3">3.
+                        <span class="text-decoration-underline ms-1">Mode de livraisons </span>
+                    </h3>
+                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-1 col-lg-1 col-xl-1">
+                            {{form_row(form.transporter)|replace({'[-br]': '<br/>'})|raw }}
+                        </div>
+                    </div>
+            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="pb-2 pt-md-2 my-4 mt-lg-5">Récapitulatif de la commande 
+                    <span class="fs-base fw-normal text-muted">({{recapCart|length }} produits)</span>
+                </h2>
+                {%set totalArticle = null%}
+                {% for product in recapCart%}
+                    {% set totalArticle = totalArticle + (product.product.priceHT * product.quantity)%}
+                
+                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                            <div class="col-md-2 col-lg-2 col-xl-2">
+                            <img
+                                src="{{ vich_uploader_asset(product.product, 'imageFile')}}"
+                                class="img-fluid rounded-3" alt="Cotton T-shirt">
+                            </div>
+                <div class="col-md-3 col-lg-3 col-xl-3">
+                            <h6 class="text-muted">{{product.product.name}}</h6>
+                            <h6 class="text-black mb-0">{{product.product.description}}</h6>
+                </div>
+                <div class="d-flex justify-content-between mb-5">
+                        <h5 class="text-uppercase">Prix</h5>
+                        <h5>€ {{ (product.product.priceHT * product.quantity / 100)|number_format(2, ',', '.') }} </h5>
+                </div>
+                </div>
+                {% endfor %}
+                <div class="d-flex justify-content-between mb-5">
+                     <h5 class="text-uppercase">Prix total</h5>
+                     <h5>€ {{ (totalArticle / 100)|number_format(2, ',', '.') }} </h5>
+                </div>
+                <button type="submit" class="btn btn-dark btn-block btn-lg"
+                data-mdb-ripple-color="dark">Valider la commande
+                </button>
+
+    {{ form_end(form)}}
+    </div>
+</div>
+
+{% endblock %}
